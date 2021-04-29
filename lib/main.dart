@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,10 +34,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(contato.nome ?? ''),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+      body: Form(
+        //key: _formkey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            spacing: 20,
+            runSpacing: 10,
+            children: <Widget>[
+              TextFormField(
+                validator: nomeValidator() ,
+                onChanged: updateNome,
+                decoration: InputDecoration(labelText: "Nome"),
+              )
+            ],
+          ),
+
         ),
       ),
     );
@@ -52,3 +65,11 @@ class ContatoModel{
 }
 
 enum ContatoType{CELULAR, TRABALHO, FAVORITO, CASA}
+
+void updateNome(nome) => contato.nome = nome;
+FieldValidator nomeValidator(){
+  return MultiValidator([
+    RequiredValidator(errorText: 'Campo Obrigatório'),
+    MinLengthValidator(4, errorText: 'Minimo 4')
+  ]);
+}
